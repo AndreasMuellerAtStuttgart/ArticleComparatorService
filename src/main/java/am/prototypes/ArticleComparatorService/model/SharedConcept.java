@@ -1,14 +1,20 @@
 package am.prototypes.ArticleComparatorService.model;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class SharedConcept {
     Concept concept;
-    List<Integer> documentOneParagraphIds;
-    List<Integer> documentTwoParagraphIds;
+    Set<Integer> documentOneParagraphIds;
+    Set<Integer> documentTwoParagraphIds;
 
-    public SharedConcept(Concept concept, List<Integer> documentOneParagraphIds, List<Integer> documentTwoParagraphIds) {
+    public SharedConcept() {
+        documentOneParagraphIds = new HashSet<>();
+        documentTwoParagraphIds = new HashSet<>();
+    }
+
+    public SharedConcept(Concept concept, Set<Integer> documentOneParagraphIds, Set<Integer> documentTwoParagraphIds) {
         this.concept = concept;
         this.documentOneParagraphIds = documentOneParagraphIds;
         this.documentTwoParagraphIds = documentTwoParagraphIds;
@@ -22,19 +28,19 @@ public class SharedConcept {
         this.concept = concept;
     }
 
-    public List<Integer> getDocumentOneParagraphIds() {
+    public Set<Integer> getDocumentOneParagraphIds() {
         return documentOneParagraphIds;
     }
 
-    public void setDocumentOneParagraphIds(List<Integer> documentOneParagraphIds) {
+    public void setDocumentOneParagraphIds(Set<Integer> documentOneParagraphIds) {
         this.documentOneParagraphIds = documentOneParagraphIds;
     }
 
-    public List<Integer> getDocumentTwoParagraphIds() {
+    public Set<Integer> getDocumentTwoParagraphIds() {
         return documentTwoParagraphIds;
     }
 
-    public void setDocumentTwoParagraphIds(List<Integer> documentTwoParagraphIds) {
+    public void setDocumentTwoParagraphIds(Set<Integer> documentTwoParagraphIds) {
         this.documentTwoParagraphIds = documentTwoParagraphIds;
     }
 

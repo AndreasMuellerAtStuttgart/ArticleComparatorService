@@ -3,15 +3,19 @@ package am.prototypes.ArticleComparatorService.services;
 import am.prototypes.ArticleComparatorService.model.Concept;
 import am.prototypes.ArticleComparatorService.model.Document;
 import am.prototypes.ArticleComparatorService.model.Paragraph;
+import am.prototypes.ArticleComparatorService.model.SharedConcept;
 import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class ModelComputerServiceTest {
     private static final ModelComputerService service = new ModelComputerService();
@@ -25,8 +29,18 @@ public class ModelComputerServiceTest {
     private static final String DOCUMENT_URL = "Test.html";
 
     @Test(expected = IllegalArgumentException.class)
-    public void testExtractDocumentNullArgument() {
+    public void testExtractDocumentFirstArgumentNull() {
         service.extractDocument(null, "", "");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testExtractDocumentSecondArgumentNull() {
+        service.extractDocument(new org.jsoup.nodes.Document("bla"), null, "");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testExtractDocumentThirdArgumentNull() {
+        service.extractDocument(new org.jsoup.nodes.Document("bla"), "", null);
     }
 
     @Test
@@ -71,5 +85,76 @@ public class ModelComputerServiceTest {
 
         Assert.assertEquals(expectedDocument.getParagraphs().size(), actualDocument.getParagraphs().size());
         Assert.assertEquals(expectedDocument, actualDocument);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void extractSharedConceptsFirstArgumentNull() {
+        service.extractSharedConcepts(null, new Document());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void extractSharedConceptsSecondArgumentNull() {
+        service.extractSharedConcepts(new Document(), null);
+    }
+
+    @Test
+    public void extractSharedConceptsNormalCase() throws IOException {
+        Concept conceptOne = new Concept();
+        conceptOne.setUrl("link_1_href");
+        conceptOne.setName("Link_1");
+
+        Concept conceptTwo = new Concept();
+        conceptTwo.setUrl("link_2_href");
+        conceptTwo.setName("Link_2");
+
+        Concept conceptThree = new Concept();
+        conceptThree.setUrl("link_3_href");
+        conceptThree.setName("Link_3");
+
+        Set<SharedConcept> expectedSharedConcepts = new HashSet<>();
+
+        SharedConcept sharedConceptOne = new SharedConcept();
+        sharedConceptOne.setConcept(conceptOne);
+        sharedConceptOne.getDocumentOneParagraphIds().add(0);
+        sharedConceptOne.getDocumentOneParagraphIds().add(1);
+        sharedConceptOne.getDocumentOneParagraphIds().add(3);
+        sharedConceptOne.getDocumentTwoParagraphIds().add(0);
+        sharedConceptOne.getDocumentTwoParagraphIds().add(1);
+
+        expectedSharedConcepts.add(sharedConceptOne);
+
+        SharedConcept sharedConceptTwo = new SharedConcept();
+        sharedConceptTwo.setConcept(conceptTwo);
+        sharedConceptTwo.getDocumentOneParagraphIds().add(0);
+        sharedConceptTwo.getDocumentOneParagraphIds().add(3);
+        sharedConceptTwo.getDocumentTwoParagraphIds().add(3);
+
+        expectedSharedConcepts.add(sharedConceptTwo);
+
+        SharedConcept sharedConceptThree = new SharedConcept();
+        sharedConceptThree.setConcept(conceptThree);
+        sharedConceptThree.getDocumentOneParagraphIds().add(3);
+        sharedConceptThree.getDocumentTwoParagraphIds().add(3);
+
+        expectedSharedConcepts.add(sharedConceptThree);
+
+        File sharedDocFileOne = ResourceUtils.getFile("classpath:test_shared_1.html");
+        org.jsoup.nodes.Document sharedHtmlDocOne = Jsoup.parse(sharedDocFileOne, "UTF-8", "");
+
+        File sharedDocFileTwo = ResourceUtils.getFile("classpath:test_shared_2.html");
+        org.jsoup.nodes.Document sharedHtmlDocTwo = Jsoup.parse(sharedDocFileTwo, "UTF-8", "");
+
+        Document sharedDocOne = service.extractDocument(sharedHtmlDocOne, DOCUMENT_URL, DOCUMENT_NAME);
+        Document sharedDocTwo = service.extractDocument(sharedHtmlDocTwo, DOCUMENT_URL, DOCUMENT_NAME);
+
+        Set<SharedConcept> actualSharedConcepts = service.extractSharedConcepts(sharedDocOne, sharedDocTwo);
+
+        for (SharedConcept sharedConcept: actualSharedConcepts) {
+            System.out.println(sharedConcept.getConcept().getUrl());
+            System.out.println(sharedConcept.getDocumentOneParagraphIds().toString());
+            System.out.println(sharedConcept.getDocumentTwoParagraphIds().toString());
+        }
+
+        Assert.assertEquals(expectedSharedConcepts, actualSharedConcepts);
     }
 }
