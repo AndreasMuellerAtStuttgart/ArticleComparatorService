@@ -149,12 +149,6 @@ public class ModelComputerServiceTest {
 
         Set<SharedConcept> actualSharedConcepts = service.extractSharedConcepts(sharedDocOne, sharedDocTwo);
 
-        for (SharedConcept sharedConcept: actualSharedConcepts) {
-            System.out.println(sharedConcept.getConcept().getUrl());
-            System.out.println(sharedConcept.getDocumentOneParagraphIds().toString());
-            System.out.println(sharedConcept.getDocumentTwoParagraphIds().toString());
-        }
-
         Assert.assertEquals(expectedSharedConcepts, actualSharedConcepts);
     }
 }

@@ -1,14 +1,11 @@
 package am.prototypes.ArticleComparatorService.model;
 
-import org.springframework.data.annotation.Id;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 public class Document {
     String name;
-    @Id
     String url;
     List<Paragraph> paragraphs;
 

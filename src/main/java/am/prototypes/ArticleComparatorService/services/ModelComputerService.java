@@ -6,9 +6,12 @@ import am.prototypes.ArticleComparatorService.model.Paragraph;
 import am.prototypes.ArticleComparatorService.model.SharedConcept;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
+import javax.xml.ws.ServiceMode;
 import java.util.*;
 
+@Service
 public class ModelComputerService {
     public Document extractDocument(org.jsoup.nodes.Document htmlDocument, String url, String name) {
         if (htmlDocument == null || url == null || name == null) {
