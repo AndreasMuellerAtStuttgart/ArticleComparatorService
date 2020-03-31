@@ -6,18 +6,19 @@ import java.util.Set;
 
 public class SharedConcept {
     Concept concept;
-    Set<Integer> documentOneParagraphIds;
-    Set<Integer> documentTwoParagraphIds;
+    Set<Integer> documentOneParagraphIndizees;
+    Set<Integer> documentTwoParagraphIndizees;
 
     public SharedConcept() {
-        documentOneParagraphIds = new HashSet<>();
-        documentTwoParagraphIds = new HashSet<>();
+        documentOneParagraphIndizees = new HashSet<>();
+        documentTwoParagraphIndizees = new HashSet<>();
     }
 
-    public SharedConcept(Concept concept, Set<Integer> documentOneParagraphIds, Set<Integer> documentTwoParagraphIds) {
+    public SharedConcept(Concept concept, Set<Integer> documentOneParagraphIndizees, 
+    		Set<Integer> documentTwoParagraphIndizees) {
         this.concept = concept;
-        this.documentOneParagraphIds = documentOneParagraphIds;
-        this.documentTwoParagraphIds = documentTwoParagraphIds;
+        this.documentOneParagraphIndizees = documentOneParagraphIndizees;
+        this.documentTwoParagraphIndizees = documentTwoParagraphIndizees;
     }
 
     public Concept getConcept() {
@@ -28,35 +29,35 @@ public class SharedConcept {
         this.concept = concept;
     }
 
-    public Set<Integer> getDocumentOneParagraphIds() {
-        return documentOneParagraphIds;
-    }
+    public Set<Integer> getDocumentOneParagraphIndizees() {
+		return documentOneParagraphIndizees;
+	}
 
-    public void setDocumentOneParagraphIds(Set<Integer> documentOneParagraphIds) {
-        this.documentOneParagraphIds = documentOneParagraphIds;
-    }
+	public void setDocumentOneParagraphIndizees(Set<Integer> documentOneParagraphIndizees) {
+		this.documentOneParagraphIndizees = documentOneParagraphIndizees;
+	}
 
-    public Set<Integer> getDocumentTwoParagraphIds() {
-        return documentTwoParagraphIds;
-    }
+	public Set<Integer> getDocumentTwoParagraphIndizees() {
+		return documentTwoParagraphIndizees;
+	}
 
-    public void setDocumentTwoParagraphIds(Set<Integer> documentTwoParagraphIds) {
-        this.documentTwoParagraphIds = documentTwoParagraphIds;
-    }
+	public void setDocumentTwoParagraphIndizees(Set<Integer> documentTwoParagraphIndizees) {
+		this.documentTwoParagraphIndizees = documentTwoParagraphIndizees;
+	}
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SharedConcept that = (SharedConcept) o;
         return Objects.equals(concept, that.concept) &&
-                Objects.equals(documentOneParagraphIds, that.documentOneParagraphIds) &&
-                Objects.equals(documentTwoParagraphIds, that.documentTwoParagraphIds);
+                Objects.equals(documentOneParagraphIndizees, that.documentOneParagraphIndizees) &&
+                Objects.equals(documentTwoParagraphIndizees, that.documentTwoParagraphIndizees);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(concept, documentOneParagraphIds, documentTwoParagraphIds);
+        return Objects.hash(concept, documentOneParagraphIndizees, documentTwoParagraphIndizees);
     }
 }

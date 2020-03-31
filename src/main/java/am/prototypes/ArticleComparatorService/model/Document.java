@@ -2,10 +2,8 @@ package am.prototypes.ArticleComparatorService.model;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 public class Document {
-    String name;
     String url;
     List<Paragraph> paragraphs;
 
@@ -13,18 +11,9 @@ public class Document {
         paragraphs = new LinkedList<>();
     }
 
-    public Document(String name, String url, List<Paragraph> paragraphs) {
-        this.name = name;
+    public Document(String url, List<Paragraph> paragraphs) {
         this.url = url;
         this.paragraphs = paragraphs;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getUrl() {
@@ -43,19 +32,34 @@ public class Document {
         this.paragraphs = paragraphs;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Document document = (Document) o;
-        return Objects.equals(name, document.name) &&
-                Objects.equals(url, document.url) &&
-                Objects.equals(paragraphs, document.paragraphs);
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((paragraphs == null) ? 0 : paragraphs.hashCode());
+		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		return result;
+	}
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(name, url, paragraphs);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Document other = (Document) obj;
+		if (paragraphs == null) {
+			if (other.paragraphs != null)
+				return false;
+		} else if (!paragraphs.equals(other.paragraphs))
+			return false;
+		if (url == null) {
+			if (other.url != null)
+				return false;
+		} else if (!url.equals(other.url))
+			return false;
+		return true;
+	}
 }

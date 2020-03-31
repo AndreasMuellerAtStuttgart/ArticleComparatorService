@@ -1,21 +1,23 @@
-package am.prototypes.ArticleComparatorService.model;
+package am.prototypes.ArticleComparatorService.dtos;
 
 import java.util.Set;
 
-public class SharedConcepts {
+import am.prototypes.ArticleComparatorService.model.Document;
+import am.prototypes.ArticleComparatorService.model.SharedConcept;
+
+public class SharedConceptsDTO {
     Document documentOne;
     Document documentTwo;
     Set<SharedConcept> sharedConcepts;
-    boolean wasMadeSuccessfully;
 
-    public SharedConcepts() {
+    public SharedConceptsDTO() {
     }
 
-    public SharedConcepts(Document documentOne, Document documentTwo, Set<SharedConcept> sharedConcepts, boolean wasMadeSuccessfully) {
+    public SharedConceptsDTO(Document documentOne, Document documentTwo, 
+    		Set<SharedConcept> sharedConcepts) {
         this.documentOne = documentOne;
         this.documentTwo = documentTwo;
         this.sharedConcepts = sharedConcepts;
-        this.wasMadeSuccessfully = wasMadeSuccessfully;
     }
 
     public Document getDocumentOne() {
@@ -40,13 +42,5 @@ public class SharedConcepts {
 
     public void setSharedConcepts(Set<SharedConcept> sharedConcepts) {
         this.sharedConcepts = sharedConcepts;
-    }
-
-    public boolean isWasMadeSuccessfully() {
-        return wasMadeSuccessfully;
-    }
-
-    public void setWasMadeSuccessfully(boolean wasMadeSuccessfully) {
-        this.wasMadeSuccessfully = wasMadeSuccessfully;
     }
 }

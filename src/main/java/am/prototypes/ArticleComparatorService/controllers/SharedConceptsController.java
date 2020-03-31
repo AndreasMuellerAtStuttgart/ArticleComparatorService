@@ -1,10 +1,14 @@
 package am.prototypes.ArticleComparatorService.controllers;
 
+import am.prototypes.ArticleComparatorService.dtos.SharedConceptsDTO;
+import am.prototypes.ArticleComparatorService.model.Document;
 import am.prototypes.ArticleComparatorService.model.SharedConcept;
-import am.prototypes.ArticleComparatorService.model.SharedConcepts;
-import am.prototypes.ArticleComparatorService.services.ModelComputerService;
+import am.prototypes.ArticleComparatorService.services.DocumentExtractorService;
+import am.prototypes.ArticleComparatorService.services.SharedConceptsService;
+
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,46 +19,37 @@ import java.util.Set;
 
 @RestController
 public class SharedConceptsController {
-    ModelComputerService modelComputerService;
+    DocumentExtractorService documentExtractor;
+    SharedConceptsService sharedConceptsService;
 
-    public SharedConceptsController(ModelComputerService modelComputerService) {
-        this.modelComputerService = modelComputerService;
-    }
-
-    @GetMapping("/getSharedConcepts")
-    public SharedConcepts getSharedConcepts(@RequestParam("documentOneUrl") String documentOneUrl,
-                                            @RequestParam("documentTwoUrl") String documentTwoUrl) {
-        SharedConcepts sharedConcepts = new SharedConcepts();
+    public SharedConceptsController(DocumentExtractorService documentExtractor,
+			SharedConceptsService sharedConceptsService) {
+		super();
+		this.documentExtractor = documentExtractor;
+		this.sharedConceptsService = sharedConceptsService;
+	}
+    
+	@GetMapping("/getSharedConcepts")
+    public ResponseEntity<SharedConceptsDTO> getSharedConcepts(
+    		@RequestParam("documentOneUrl") String documentOneUrl, 
+    		@RequestParam("documentTwoUrl") String documentTwoUrl) {
+        SharedConceptsDTO sharedConceptsDTO = new SharedConceptsDTO();
 
         try {
-            Document htmlDocumentOne = Jsoup.connect(documentOneUrl).get();
-            Document htmlDocumentTwo = Jsoup.connect(documentTwoUrl).get();
+            Document documentOne = documentExtractor.extractDocument(documentOneUrl);
+            Document documentTwo = documentExtractor.extractDocument(documentTwoUrl);
 
-            System.out.println(htmlDocumentOne.getAllElements().size());
-            System.out.println(htmlDocumentTwo.getAllElements().size());
+            Set<SharedConcept> sharedConcepts = sharedConceptsService.extractSharedConcepts(
+            		documentOne, documentTwo);
 
-            am.prototypes.ArticleComparatorService.model.Document documentOne = modelComputerService.extractDocument(
-                    htmlDocumentOne, documentOneUrl, htmlDocumentOne.title());
-            am.prototypes.ArticleComparatorService.model.Document documentTwo = modelComputerService.extractDocument(
-                    htmlDocumentTwo, documentTwoUrl, htmlDocumentTwo.title());
+            sharedConceptsDTO.setDocumentOne(documentOne);
+            sharedConceptsDTO.setDocumentTwo(documentTwo);
+            sharedConceptsDTO.setSharedConcepts(sharedConcepts);
 
-            Set<SharedConcept> sharedConceptSet = modelComputerService.extractSharedConcepts(documentOne, documentTwo);
-
-            sharedConcepts.setDocumentOne(documentOne);
-            sharedConcepts.setDocumentTwo(documentTwo);
-            sharedConcepts.setSharedConcepts(sharedConceptSet);
-            sharedConcepts.setWasMadeSuccessfully(true);
-
-            return sharedConcepts;
+            return new ResponseEntity<SharedConceptsDTO>(sharedConceptsDTO, HttpStatus.OK);
         } catch (IOException e) {
-            e.printStackTrace();
-
-            sharedConcepts.setDocumentOne(new am.prototypes.ArticleComparatorService.model.Document());
-            sharedConcepts.setDocumentTwo(new am.prototypes.ArticleComparatorService.model.Document());
-            sharedConcepts.setSharedConcepts(new HashSet<>());
-            sharedConcepts.setWasMadeSuccessfully(false);
-
-            return sharedConcepts;
+        	return new ResponseEntity<SharedConceptsDTO>(sharedConceptsDTO, 
+        			HttpStatus.BAD_REQUEST);
         }
     }
 }
