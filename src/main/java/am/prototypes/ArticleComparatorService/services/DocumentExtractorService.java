@@ -16,7 +16,7 @@ import am.prototypes.ArticleComparatorService.model.Paragraph;
 @Service
 public class DocumentExtractorService {
 
-	private final String PARAGRAPH_TAG_1 = "p";
+	private final String PARAGRAPH_TAG = "p";
 	private final String LINK_TAG = "a";
 	private final String HYPERLINK_ATTRIBUTE = "href";
 	
@@ -33,7 +33,7 @@ public class DocumentExtractorService {
 			throw e;
 		}
 
-        Elements paragraphElements = htmlDocument.body().getElementsByTag(PARAGRAPH_TAG_1);
+        Elements paragraphElements = htmlDocument.body().getElementsByTag(PARAGRAPH_TAG);
 
         List<Paragraph> paragraphs = extractParagraphsFromParagraphElements(paragraphElements);
 
